@@ -12,4 +12,7 @@ Check the other scripts in `package.json` to see how to run it without developin
 
 # Packaging
 
-    electron-packager . Dashboard --platform=linux --arch=armv7l
+Currently, only the RaspberryPi is supported as a target.
+
+    npm install
+    npm run build:pi
