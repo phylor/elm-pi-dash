@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="standard.css">
+    <script type="text/javascript" src="elm.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+</head>
+
+<body></body>
+<script>
+    var Elm = require('./elm');
+    var exec = require('child_process').exec;
+
+    function execute(command, callback){
+        exec(command, function(error, stdout, stderr){ callback(stdout, stderr); });
+    };
+
+
+    var app = Elm.Main.fullscreen();
+
+    app.ports.changeMode.subscribe(function(attributes) {
+        var mode = attributes.mode;
+        var credentials = attributes.credentials;
+        var command = "gigasetelements-cli -u " + credentials.username + " -p " + credentials.password + " -m " + mode + " | grep 'Modus set from' | sed 's/.*\\([A-Z]\\{4\\}\\)/\\1/'";
+
+        console.log('executing..');
+
+        execute(command, function(output, error) {
+            console.log('executed');
+            app.ports.getMode.send(output);
+            console.log(output);
+            console.log(error);
+        });
+    });
+
+    app.ports.requestMode.subscribe(function(credentials) {
+        var command = "gigasetelements-cli -u " + credentials.username + " -p " + credentials.password + " | grep 'Modus' | sed 's/.*\\([A-Z]\\{4\\}\\)/\\1/'";
+
+        execute(command, function(output, error) {
+            app.ports.getMode.send(output);
+            console.log(output);
+            console.log(error);
+        });
+    });
+
+    app.ports.requestCredentials.subscribe(function() {
+        app.ports.getCredentials.send({ "username": localStorage.username || null, "password": localStorage.password || null });
+    });
+
+    app.ports.saveCredentials.subscribe(function(credentials) {
+        localStorage.username = credentials.username;
+        localStorage.password = credentials.password;
+    });
+</script>
+</html>

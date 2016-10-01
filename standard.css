@@ -1,0 +1,35 @@
+body {
+    background-color: rgb(33, 33, 33);
+    font-family: sans-serif;
+}
+
+.box {
+    color: rgb(255, 170, 40);
+    font-size: 3rem;
+    background-color: rgb(51, 51, 51);
+    padding: 0.5rem;
+}
+
+button {
+    border: 2px solid rgb(255, 170, 40);
+    color: rgb(255, 170, 40);
+    background-color: transparent;
+    outline: none;
+}
+
+input {
+    border: 2px solid rgb(255, 170, 40);
+    color: rgb(255, 170, 40);
+    outline: none;
+    background-color: transparent;
+}
+
+.box.countdown {
+    background-color: rgb(255, 170, 40);
+    color: rgb(33, 33, 33);
+}
+
+.box.countdown button {
+    color: rgb(33, 33, 33);
+    border: 2px solid rgb(33, 33, 33);
+}
