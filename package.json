@@ -7,7 +7,8 @@
     "elm": "elm make Main.elm --output elm.js || true",
     "elm:watch": "chokidar '**/*.elm' -c 'npm run elm'",
     "start": "electron main.js",
-    "watch": "npm run start & npm run elm:watch & wait"
+    "watch": "npm run start & npm run elm:watch & wait",
+    "build:pi": "electron-packager . Dashboard --platform=linux --arch=armv7l"
   },
   "repository": {
     "type": "git",
