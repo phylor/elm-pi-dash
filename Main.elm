@@ -6,6 +6,9 @@ import Html.Attributes exposing (class)
 import Html.Events exposing (onInput, onClick)
 import String
 import Time
+import GigasetElements exposing (..)
+import Messages exposing (..)
+
 
 type alias Model =
     { countdown : Int
@@ -16,119 +19,16 @@ type alias Model =
     , credentials : Credentials
     }
 
-type Mode
-    = Pending
-    | Home
-    | Away
-
-type Msg
-    = ChangePassword String
-    | ChangeUsername String
-    | SavePassword
-    | ToggleMode
-    | SaveMode String
-    | Tick Time.Time
-    | CancelCountdown
-    | GetCredentials Credentials
-    | ResetCredentials
-
-type alias ChangeModeAttributes =
-    { credentials : Credentials
-    , mode : String
-    }
-
-type alias Credentials =
-    { username : Maybe String
-    , password : Maybe String
-    }
-
 init =
     ( Model 0 False Pending "" "" (Credentials Nothing Nothing), requestCredentials Nothing )
 
 view model =
     div [ class "pure-g" ]
         [ div [ class "pure-u-1-3" ]
-            [ div [ class "box" ]
-                [ div [ onClick ResetCredentials ]
-                    [ i [ class "fa fa-cog" ] []
-                    ]
-                , div [ class "title" ] [ text "Security Mode" ]
-                , case model.countdownActive of
-                    True ->
-                        viewCountdown model
-
-                    False ->
-                        case model.credentials.username of
-                            Just username ->
-                                case model.mode of
-                                    Home ->
-                                        viewHomeOrAway model
-                                    Away ->
-                                        viewHomeOrAway model
-                                    Pending ->
-                                        viewPending model
-
-                            Nothing ->
-                                div []
-                                    [ input [ onInput ChangeUsername ] []
-                                    , input [ onInput ChangePassword ] []
-                                , button [ onClick SavePassword ] [ text "Save" ]
-                        ]
-                ]
+            [ viewAlarmMode model
             ]
         ]
 
-viewCountdown model =
-    div [ onClick CancelCountdown ]
-        [ p [ class "status" ]
-            [ div [ class "status-icon active" ]
-                [ div []
-                    [ i [ class "fa fa-lock fa-spin" ] []
-                    ]
-                ]
-            , text (toString model.countdown)
-            ]
-        ]
-
-viewHomeOrAway model =
-    div [ onClick ToggleMode ]
-        [ p [ class "status" ]
-            [ viewIcon model
-            , text (toString model.mode)
-            ]
-        ]
-
-viewIcon model =
-    case model.mode of
-        Home ->
-            div [ class "status-icon inactive" ]
-                [ div []
-                    [ i [ class "fa fa-unlock" ] []
-                    ]
-                ]
-
-        Away ->
-            div [ class "status-icon active" ]
-                [ div []
-                    [ i [ class "fa fa-lock" ] []
-                    ]
-                ]
-
-        Pending ->
-            div [ class "status-icon inactive" ]
-                [ div []
-                    [ i [ class "fa fa-question" ] []
-                    ]
-                ]
-
-viewPending model =
-    p [ class "status" ]
-        [ div [ class "status-icon active" ]
-            [ div []
-                [ i [ class "fa fa-spinner fa-spin" ] []
-                ]
-            ]
-        ]
 
 update message model =
     case message of
