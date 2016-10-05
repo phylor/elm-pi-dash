@@ -46,44 +46,53 @@ init =
     ( Model 0 False Pending "" "" (Credentials Nothing Nothing), requestCredentials Nothing )
 
 view model =
-    div []
-        [ button [ onClick ResetCredentials ] [ text "Reset" ]
-        , case model.countdownActive of
-            True ->
-                viewCountdown model
+    div [ class "pure-g" ]
+        [ div [ class "pure-u-1-3" ]
+            [ div [ class "box" ]
+                [ div [ onClick ResetCredentials ]
+                    [ i [ class "fa fa-cog" ] []
+                    ]
+                , div [ class "title" ] [ text "Security Mode" ]
+                , case model.countdownActive of
+                    True ->
+                        viewCountdown model
 
-            False ->
-                case model.credentials.username of
-                    Just username ->
-                        case model.mode of
-                            Home ->
-                                viewHomeOrAway model
-                            Away ->
-                                viewHomeOrAway model
-                            Pending ->
-                                viewPending model
+                    False ->
+                        case model.credentials.username of
+                            Just username ->
+                                case model.mode of
+                                    Home ->
+                                        viewHomeOrAway model
+                                    Away ->
+                                        viewHomeOrAway model
+                                    Pending ->
+                                        viewPending model
 
-                    Nothing ->
-                        div []
-                            [ input [ onInput ChangeUsername ] []
-                            , input [ onInput ChangePassword ] []
-                        , button [ onClick SavePassword ] [ text "Save" ]
+                            Nothing ->
+                                div []
+                                    [ input [ onInput ChangeUsername ] []
+                                    , input [ onInput ChangePassword ] []
+                                , button [ onClick SavePassword ] [ text "Save" ]
                         ]
+                ]
+            ]
         ]
 
 viewCountdown model =
-    div [ class "box countdown", onClick CancelCountdown ]
-        [ button [] [ text "Cancel" ]
-        , p []
-            [ i [ class "fa fa-lock fa-spin" ] []
+    div [ onClick CancelCountdown ]
+        [ p [ class "status" ]
+            [ div [ class "status-icon active" ]
+                [ div []
+                    [ i [ class "fa fa-lock fa-spin" ] []
+                    ]
+                ]
             , text (toString model.countdown)
             ]
         ]
 
 viewHomeOrAway model =
-    div [ class "box", onClick ToggleMode ]
-        [ button [ onClick ToggleMode ] [ text "Toggle" ]
-        , p []
+    div [ onClick ToggleMode ]
+        [ p [ class "status" ]
             [ viewIcon model
             , text (toString model.mode)
             ]
@@ -92,15 +101,33 @@ viewHomeOrAway model =
 viewIcon model =
     case model.mode of
         Home ->
-            i [ class "fa fa-unlock" ] []
+            div [ class "status-icon inactive" ]
+                [ div []
+                    [ i [ class "fa fa-unlock" ] []
+                    ]
+                ]
+
         Away ->
-            i [ class "fa fa-lock" ] []
+            div [ class "status-icon active" ]
+                [ div []
+                    [ i [ class "fa fa-lock" ] []
+                    ]
+                ]
+
         Pending ->
-            i [ class "fa fa-question" ] []
+            div [ class "status-icon inactive" ]
+                [ div []
+                    [ i [ class "fa fa-question" ] []
+                    ]
+                ]
 
 viewPending model =
-    div [ class "box" ]
-        [ i [ class "fa fa-spinner fa-spin" ] []
+    p [ class "status" ]
+        [ div [ class "status-icon active" ]
+            [ div []
+                [ i [ class "fa fa-spinner fa-spin" ] []
+                ]
+            ]
         ]
 
 update message model =
