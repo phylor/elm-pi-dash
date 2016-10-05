@@ -12,7 +12,7 @@ Check the other scripts in `package.json` to see how to run it without developin
 
 # Packaging
 
-Currently, only the RaspberryPi is supported as a target.
+Currently, only the RaspberryPi is supported as a target. Note that building of the application is currently not supported on the Raspberry Pi. You need a different machine for building.
 
     npm install
     npm run build:pi
