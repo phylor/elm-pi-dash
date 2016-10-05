@@ -8,6 +8,7 @@ import String
 import Time
 import GigasetElements exposing (..)
 import Messages exposing (..)
+import Shutdown exposing (..)
 
 
 type alias Model =
@@ -17,15 +18,20 @@ type alias Model =
     , inputPassword : String
     , inputUsername : String
     , credentials : Credentials
+    , shutdownCountdown : Int
+    , shutdownCountdownActive : Bool
     }
 
 init =
-    ( Model 0 False Pending "" "" (Credentials Nothing Nothing), requestCredentials Nothing )
+    ( Model 0 False Pending "" "" (Credentials Nothing Nothing) 0 False, requestCredentials Nothing )
 
 view model =
     div [ class "pure-g" ]
         [ div [ class "pure-u-1-3" ]
             [ viewAlarmMode model
+            ]
+        , div [ class "pure-u-1-3" ]
+            [ viewShutdown model
             ]
         ]
 
@@ -78,6 +84,16 @@ update message model =
                 False ->
                     ( model, Cmd.none )
 
+        ShutdownCountdownTick time ->
+            case model.shutdownCountdownActive of
+                True ->
+                    if model.shutdownCountdown > 1 then
+                        ( { model | shutdownCountdown = model.shutdownCountdown - 1 }, Cmd.none )
+                    else
+                        ( { model | shutdownCountdown = 0, shutdownCountdownActive = False }, shutdown "" )
+                False ->
+                    ( model, Cmd.none )
+
         CancelCountdown ->
             ( { model | countdownActive = False }, Cmd.none )
 
@@ -91,6 +107,12 @@ update message model =
         ResetCredentials ->
             ( { model | credentials = Credentials Nothing Nothing }, Cmd.none )
 
+        StartShutdownCountdown ->
+            ( { model | shutdownCountdown = 10, shutdownCountdownActive = True }, Cmd.none )
+
+        CancelShutdownCountdown ->
+            ( { model | shutdownCountdown = 0, shutdownCountdownActive = False }, Cmd.none )
+
 main =
   Html.App.program
     { init = init
@@ -103,12 +125,15 @@ subscriptions model =
     Sub.batch
         [ getMode SaveMode
         , Time.every Time.second Tick
+        , Time.every Time.second ShutdownCountdownTick
         , getCredentials GetCredentials
         ]
 
 port changeMode : ChangeModeAttributes -> Cmd msg
 port requestMode : Credentials -> Cmd msg
-port getMode : (String -> msg) -> Sub msg
 port requestCredentials : Maybe String -> Cmd msg
-port getCredentials : (Credentials -> msg) -> Sub msg
 port saveCredentials : Credentials -> Cmd msg
+port shutdown : String -> Cmd msg
+
+port getMode : (String -> msg) -> Sub msg
+port getCredentials : (Credentials -> msg) -> Sub msg

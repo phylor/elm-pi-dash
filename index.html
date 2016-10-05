@@ -54,5 +54,9 @@
         localStorage.username = credentials.username;
         localStorage.password = credentials.password;
     });
+
+    app.ports.shutdown.subscribe(function() {
+        execute('sudo shutdown', function() {});
+    });
 </script>
 </html>

@@ -2,6 +2,10 @@ body {
     background-color: rgb(33, 33, 33);
 }
 
+.pure-g > div > * {
+    margin: 0.5rem;
+}
+
 .box {
     color: rgb(255, 170, 40);
     background-color: rgb(51, 51, 51);

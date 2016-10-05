@@ -13,6 +13,9 @@ type Msg
     | CancelCountdown
     | GetCredentials Credentials
     | ResetCredentials
+    | StartShutdownCountdown
+    | CancelShutdownCountdown
+    | ShutdownCountdownTick Time.Time
 
 
 type alias ChangeModeAttributes =

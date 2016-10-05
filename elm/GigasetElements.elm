@@ -21,7 +21,7 @@ viewAlarmMode model =
         , div [ class "title" ] [ text "Security Mode" ]
         , case model.countdownActive of
             True ->
-                viewCountdown model
+                viewCountdown CancelCountdown model.countdown
 
             False ->
                 case model.credentials.username of
