@@ -6,13 +6,13 @@ import Html.Events exposing (onClick)
 import Messages exposing (..)
 
 
-viewCountdown : Msg -> Int -> Html Msg
-viewCountdown cancelMessage countdown =
+viewCountdown : Msg -> Int -> String -> Html Msg
+viewCountdown cancelMessage countdown iconClass =
     div [ onClick cancelMessage ]
         [ p [ class "status" ]
             [ div [ class "status-icon active" ]
                 [ div []
-                    [ i [ class "fa fa-lock fa-spin" ] []
+                    [ i [ class ("fa fa-spin " ++ iconClass) ] []
                     ]
                 ]
             , text (toString countdown)

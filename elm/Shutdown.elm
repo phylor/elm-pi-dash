@@ -17,7 +17,7 @@ viewShutdown model =
 viewContent model =
     if model.shutdownCountdownActive then
         p [ class "status" ]
-            [ viewCountdown CancelShutdownCountdown model.shutdownCountdown
+            [ viewCountdown CancelShutdownCountdown model.shutdownCountdown "fa-power-off"
             ]
     else
         p [ class "status", onClick StartShutdownCountdown ]
