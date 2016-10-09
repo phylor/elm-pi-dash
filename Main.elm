@@ -8,7 +8,7 @@ import String
 import Time
 import GigasetElements exposing (..)
 import Messages exposing (..)
-import Shutdown exposing (..)
+import Dashboard exposing (..)
 
 
 type alias Model =
@@ -20,20 +20,44 @@ type alias Model =
     , credentials : Credentials
     , shutdownCountdown : Int
     , shutdownCountdownActive : Bool
+    , ipAddress : String
+    , display : Display
+    , rebootCountdown : Int
+    , rebootCountdownActive : Bool
     }
 
+
 init =
-    ( Model 0 False Pending "" "" (Credentials Nothing Nothing) 0 False, requestCredentials Nothing )
+    ( Model 0 False Pending "" "" (Credentials Nothing Nothing) 0 False "" Dashboard 0 False, requestCredentials Nothing )
 
 view model =
-    div [ class "pure-g" ]
-        [ div [ class "pure-u-1-3" ]
-            [ viewAlarmMode model
-            ]
-        , div [ class "pure-u-1-3" ]
-            [ viewShutdown model
-            ]
-        ]
+    case model.display of
+        Dashboard ->
+            div [ class "pure-g" ]
+                [ div [ class "pure-u-1-3" ]
+                    [ viewAlarmMode model
+                    ]
+                , viewAction "System" (ChangeDisplay System) "icon-raspberrypi"
+                ]
+
+        System ->
+            div [ class "pure-g" ]
+                [ viewAction "back" (ChangeDisplay Dashboard) "fa fa-chevron-left"
+                , div [ class "pure-u-1-3" ]
+                    [ viewCountdownAction "Power off" model.shutdownCountdownActive model.shutdownCountdown CancelShutdownCountdown StartShutdownCountdown "fa fa-power-off"
+                    ]
+                , div [ class "pure-u-1-3" ]
+                    [ viewCountdownAction "Reboot" model.rebootCountdownActive model.rebootCountdown CancelRebootCountdown StartRebootCountdown "fa fa-repeat"
+                    ]
+                , div [ class "pure-u-1-3" ]
+                    [ div [ class "box" ]
+                        [ div [ class "fa" ] []
+                        , div [ class "title" ] [ text "IP Address" ]
+                        , div [] [ text model.ipAddress ]
+                        ]
+                    ]
+                ]
+
 
 
 update message model =
@@ -94,6 +118,17 @@ update message model =
                 False ->
                     ( model, Cmd.none )
 
+        RebootCountdownTick time ->
+            case model.rebootCountdownActive of
+                True ->
+                    if model.rebootCountdown > 1 then
+                        ( { model | rebootCountdown = model.rebootCountdown - 1 }, Cmd.none )
+                    else
+                        ( { model | rebootCountdown = 0, rebootCountdownActive = False }, reboot "" )
+
+                False ->
+                    ( model, Cmd.none )
+
         CancelCountdown ->
             ( { model | countdownActive = False }, Cmd.none )
 
@@ -113,6 +148,18 @@ update message model =
         CancelShutdownCountdown ->
             ( { model | shutdownCountdown = 0, shutdownCountdownActive = False }, Cmd.none )
 
+        GetIpAddress ip ->
+            ( { model | ipAddress = ip }, Cmd.none )
+
+        ChangeDisplay display ->
+            ( { model | display = display }, Cmd.none )
+
+        StartRebootCountdown ->
+            ( { model | rebootCountdown = 10, rebootCountdownActive = True }, Cmd.none )
+
+        CancelRebootCountdown ->
+            ( { model | rebootCountdown = 0, rebootCountdownActive = False }, Cmd.none )
+
 main =
   Html.App.program
     { init = init
@@ -126,7 +173,9 @@ subscriptions model =
         [ getMode SaveMode
         , Time.every Time.second Tick
         , Time.every Time.second ShutdownCountdownTick
+        , Time.every Time.second RebootCountdownTick
         , getCredentials GetCredentials
+        , getIpAddress GetIpAddress
         ]
 
 port changeMode : ChangeModeAttributes -> Cmd msg
@@ -134,6 +183,8 @@ port requestMode : Credentials -> Cmd msg
 port requestCredentials : Maybe String -> Cmd msg
 port saveCredentials : Credentials -> Cmd msg
 port shutdown : String -> Cmd msg
+port reboot : String -> Cmd msg
 
 port getMode : (String -> msg) -> Sub msg
 port getCredentials : (Credentials -> msg) -> Sub msg
+port getIpAddress : (String -> msg) -> Sub msg

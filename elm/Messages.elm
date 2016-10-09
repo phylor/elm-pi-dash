@@ -16,6 +16,11 @@ type Msg
     | StartShutdownCountdown
     | CancelShutdownCountdown
     | ShutdownCountdownTick Time.Time
+    | GetIpAddress String
+    | ChangeDisplay Display
+    | StartRebootCountdown
+    | CancelRebootCountdown
+    | RebootCountdownTick Time.Time
 
 
 type alias ChangeModeAttributes =
@@ -28,3 +33,8 @@ type alias Credentials =
     { username : Maybe String
     , password : Maybe String
     }
+
+
+type Display
+    = Dashboard
+    | System

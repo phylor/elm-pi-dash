@@ -12,7 +12,7 @@ viewCountdown cancelMessage countdown iconClass =
         [ p [ class "status" ]
             [ div [ class "status-icon active" ]
                 [ div []
-                    [ i [ class ("fa fa-spin " ++ iconClass) ] []
+                    [ i [ class ("fa-spin " ++ iconClass) ] []
                     ]
                 ]
             , text (toString countdown)
@@ -20,3 +20,36 @@ viewCountdown cancelMessage countdown iconClass =
         ]
 
 
+viewAction label onClickMessage iconClasses =
+    div [ class "pure-u-1-3" ]
+        [ div [ class "icon-box", onClick onClickMessage ]
+            [ div [ class "fa" ] []
+            , div [ class "title" ] [ text label ]
+            , p [ class "icon" ]
+                [ i [ class iconClasses ] []
+                ]
+            ]
+        ]
+
+
+viewCountdownAction label countdownActive countdownSeconds cancelMessage startMessage iconClasses =
+    div [ class "box" ]
+        [ div [ class "fa" ] []
+        , div [ class "title" ] [ text label ]
+        , viewCountdownContent countdownActive countdownSeconds cancelMessage startMessage iconClasses
+        ]
+
+
+viewCountdownContent countdownActive countdownSeconds cancelMessage startMessage iconClasses =
+    if countdownActive then
+        p [ class "status" ]
+            [ viewCountdown cancelMessage countdownSeconds iconClasses
+            ]
+    else
+        p [ class "status", onClick startMessage ]
+            [ div [ class "status-icon inactive" ]
+                [ div []
+                    [ i [ class iconClasses ] []
+                    ]
+                ]
+            ]
