@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install -y xscreensaver
+sudo apt-get install -y xscreensaver python-rpi.gpio
 sudo bash -c "echo 'xserver_command = X -nocursor' >> /etc/lightdm/lightdm.conf"
 # no need to add xscreensaver to autostart, because LXDE automatically starts it if it's available
 echo '@/home/pi/Dashboard-linux-armv7l/Dashboard' >> ~/.config/lxsession/LXDE-pi/autostart
@@ -42,4 +42,24 @@ while (<IN>) {
         $blanked = 0;
     }
 }
+EOF
+
+# Connect PIR sensor to GPIO 4
+echo > ~/screensaver-deactive-on-movement << EOF
+import time
+import RPi.GPIO as gpio
+from subprocess import call
+
+gpio.setmode(gpio.BCM)
+
+pir_pin = 4
+
+gpio.setup(pir_pin, gpio.IN)
+
+while True:
+        if gpio.input(pir_pin):
+                print("PIR")
+                call(["xscreensaver-command", "-deactivate"])
+                time.sleep(40) # same as screen inactivation, should be refactored to one location
+        time.sleep(0.5)
 EOF
