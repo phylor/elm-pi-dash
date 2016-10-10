@@ -21,6 +21,7 @@ type Msg
     | StartRebootCountdown
     | CancelRebootCountdown
     | RebootCountdownTick Time.Time
+    | UpdateTime Time.Time
 
 
 type alias ChangeModeAttributes =

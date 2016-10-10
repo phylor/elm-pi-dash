@@ -9,6 +9,8 @@ import Time
 import GigasetElements exposing (..)
 import Messages exposing (..)
 import Dashboard exposing (..)
+import Task
+import Date
 
 
 type alias Model =
@@ -24,11 +26,12 @@ type alias Model =
     , display : Display
     , rebootCountdown : Int
     , rebootCountdownActive : Bool
+    , currentTime : Time.Time
     }
 
 
 init =
-    ( Model 0 False Pending "" "" (Credentials Nothing Nothing) 0 False "" Dashboard 0 False, requestCredentials Nothing )
+    ( Model 0 False Pending "" "" (Credentials Nothing Nothing) 0 False "" Dashboard 0 False 0, requestCredentials Nothing )
 
 view model =
     case model.display of
@@ -56,8 +59,24 @@ view model =
                         , div [ class "content" ] [ text model.ipAddress ]
                         ]
                     ]
+                , div [ class "pure-u-1-3" ]
+                    [ div [ class "box" ]
+                        [ div [ class "fa" ] []
+                        , div [ class "title" ] [ text "Time" ]
+                        , div [ class "content" ] [ text <| viewTime <| model.currentTime ]
+                        ]
+                    ]
                 ]
 
+
+viewTime time =
+    let
+        date = Date.fromTime time
+        hour = toString <| Date.hour date
+        minute = toString <| Date.minute date
+        second = toString <| Date.second date
+    in
+        hour ++ ":" ++ minute ++ ":" ++ second
 
 
 update message model =
@@ -160,6 +179,9 @@ update message model =
         CancelRebootCountdown ->
             ( { model | rebootCountdown = 0, rebootCountdownActive = False }, Cmd.none )
 
+        UpdateTime time ->
+            ( { model | currentTime = time }, Cmd.none )
+
 main =
   Html.App.program
     { init = init
@@ -174,6 +196,7 @@ subscriptions model =
         , Time.every Time.second Tick
         , Time.every Time.second ShutdownCountdownTick
         , Time.every Time.second RebootCountdownTick
+        , Time.every Time.second UpdateTime
         , getCredentials GetCredentials
         , getIpAddress GetIpAddress
         ]
