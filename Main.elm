@@ -53,7 +53,7 @@ view model =
                     [ div [ class "box" ]
                         [ div [ class "fa" ] []
                         , div [ class "title" ] [ text "IP Address" ]
-                        , div [] [ text model.ipAddress ]
+                        , div [ class "content" ] [ text model.ipAddress ]
                         ]
                     ]
                 ]
