@@ -44,11 +44,9 @@ viewAlarmMode model =
 
 
 viewHomeOrAway model =
-    div [ onClick ToggleMode ]
-        [ p [ class "status" ]
-            [ viewIcon model
-            , text (toString model.mode)
-            ]
+    div [ class "status", onClick ToggleMode ]
+        [ viewIcon model
+        , text (toString model.mode)
         ]
 
 
@@ -77,7 +75,7 @@ viewIcon model =
 
 
 viewPending model =
-    p [ class "status" ]
+    div [ class "status" ]
         [ div [ class "status-icon active" ]
             [ div []
                 [ i [ class "fa fa-spinner fa-spin" ] []
