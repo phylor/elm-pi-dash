@@ -9,12 +9,14 @@ import Messages exposing (..)
 viewCountdown : Msg -> Int -> String -> Html Msg
 viewCountdown cancelMessage countdown iconClass =
     div [ class "status", onClick cancelMessage ]
-        [ div [ class "status-icon active" ]
-            [ div []
-                [ i [ class ("fa-spin " ++ iconClass) ] []
+        [ div [ class "centered" ]
+            [ div [ class "icon active" ]
+                [ div []
+                    [ i [ class ("fa-spin " ++ iconClass) ] []
+                    ]
                 ]
+            , div [] [ text (toString countdown) ]
             ]
-        , text (toString countdown)
         ]
 
 
@@ -45,9 +47,11 @@ viewCountdownContent countdownActive countdownSeconds cancelMessage startMessage
         viewCountdown cancelMessage countdownSeconds iconClasses
     else
         div [ class "status", onClick startMessage ]
-            [ div [ class "status-icon inactive" ]
-                [ div []
-                    [ i [ class iconClasses ] []
+            [ div [ class "centered" ]
+                [ div [ class "icon inactive" ]
+                    [ div []
+                        [ i [ class iconClasses ] []
+                        ]
                     ]
                 ]
             ]

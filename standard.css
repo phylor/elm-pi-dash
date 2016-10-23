@@ -27,11 +27,12 @@ body {
     box-sizing: border-box;
 }
 
-.box .status div:first-of-type {
+.box .centered {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
 }
 
 .box .content {
@@ -71,32 +72,23 @@ input {
     background-color: transparent;
 }
 
-.status-icon {
+.status .icon {
     border-radius: 50%;
     border: 2px solid rgb(255, 170, 40);
     width: 6rem;
     height: 6rem;
     font-size: 3rem;
-    position: relative;
-    text-align: center;
     margin: auto;
 }
 
-.active.status-icon {
+.status .active.icon {
     background-color: rgb(255, 170, 40);
     color: rgb(51, 51, 51);
 }
 
-.inactive.status-icon {
+.status .inactive.icon {
     background-color: rgb(51, 51, 51);
     color: rgb(255, 170, 40);
-}
-
-.status-icon div {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .title {

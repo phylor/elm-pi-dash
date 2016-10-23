@@ -45,29 +45,31 @@ viewAlarmMode model =
 
 viewHomeOrAway model =
     div [ class "status", onClick ToggleMode ]
-        [ viewIcon model
-        , text (toString model.mode)
+        [ div [ class "centered" ]
+            [ viewIcon model
+            , div [] [ text (toString model.mode) ]
+            ]
         ]
 
 
 viewIcon model =
     case model.mode of
         Home ->
-            div [ class "status-icon inactive" ]
+            div [ class "icon inactive" ]
                 [ div []
                     [ i [ class "fa fa-unlock" ] []
                     ]
                 ]
 
         Away ->
-            div [ class "status-icon active" ]
+            div [ class "icon active" ]
                 [ div []
                     [ i [ class "fa fa-lock" ] []
                     ]
                 ]
 
         Pending ->
-            div [ class "status-icon inactive" ]
+            div [ class "icon inactive" ]
                 [ div []
                     [ i [ class "fa fa-question" ] []
                     ]
@@ -76,9 +78,11 @@ viewIcon model =
 
 viewPending model =
     div [ class "status" ]
-        [ div [ class "status-icon active" ]
-            [ div []
-                [ i [ class "fa fa-spinner fa-spin" ] []
+        [ div [ class "centered" ]
+            [ div [ class "icon active" ]
+                [ div []
+                    [ i [ class "fa fa-spinner fa-spin" ] []
+                    ]
                 ]
             ]
         ]
