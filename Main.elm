@@ -72,11 +72,18 @@ view model =
 viewTime time =
     let
         date = Date.fromTime time
-        hour = toString <| Date.hour date
-        minute = toString <| Date.minute date
-        second = toString <| Date.second date
+        hour = fillWithZeros 2 <| toString <| Date.hour date
+        minute = fillWithZeros 2 <| toString <| Date.minute date
+        second = fillWithZeros 2 <| toString <| Date.second date
     in
         hour ++ ":" ++ minute ++ ":" ++ second
+
+
+fillWithZeros totalDigits number =
+    if String.length number < totalDigits then
+        fillWithZeros totalDigits ("0" ++ number)
+    else
+        number
 
 
 update message model =
