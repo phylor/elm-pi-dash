@@ -23,27 +23,22 @@ body {
 .box .status {
     font-size: 3rem;
     text-align: center;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.box .status div:first-of-type {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -25%);
-    height: 100%;
-    box-sizing: border-box;
+    transform: translate(-50%, -50%);
 }
 
 .box .content {
     text-align: center;
 }
 
-.icon-box {
-    color: rgb(255, 170, 40);
-    background-color: rgb(51, 51, 51);
-    padding: 0.5rem;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-.icon-box .icon {
+.box .icon {
     font-size: 6rem;
     text-align: center;
     position: relative;
@@ -51,12 +46,15 @@ body {
     height: 100%;
 }
 
-.icon-box i[class*='icon-'] {
-    padding-left: 1.875rem;
+.box .icon div {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+.box .icon i[class*='icon-raspberrypi'] {
+    padding-left: 1.875rem;
 }
 
 button {
@@ -104,4 +102,8 @@ input {
 .title {
     color: rgb(137, 137, 137);
     text-align: center;
+}
+
+.content {
+    font-size: 4rem;
 }

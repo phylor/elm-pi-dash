@@ -20,11 +20,13 @@ viewCountdown cancelMessage countdown iconClass =
 
 viewAction label onClickMessage iconClasses =
     div [ class "pure-u-1-3" ]
-        [ div [ class "icon-box", onClick onClickMessage ]
+        [ div [ class "box", onClick onClickMessage ]
             [ div [ class "fa" ] []
             , div [ class "title" ] [ text label ]
             , div [ class "icon" ]
-                [ i [ class iconClasses ] []
+                [ div []
+                    [ i [ class iconClasses ] []
+                    ]
                 ]
             ]
         ]
